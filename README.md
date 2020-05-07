@@ -6,4 +6,4 @@
 - TryMeNu will get you out of your comfort zone
 
 
-#### by Nicolas Azzi & Julien Hosri
+#### by Nicolas Azzi & Julien Hosri (nice)
