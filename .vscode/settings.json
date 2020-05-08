@@ -1,0 +1,11 @@
+{
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "python.pythonPath": "D:\\BackendProjects\\trymenu\\trymenu_env\\Scripts\\python.exe",
+
+
+    "python.linting.pylintArgs": [
+        "--load-plugins=pylint_django",
+        "--errors-only"
+    ],
+}
