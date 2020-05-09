@@ -8,19 +8,22 @@ from .serializers import AccountRegistrationSerializer
 @api_view(['POST',])
 def registration_view(request):
 
-    serializer = AccountRegistrationSerializer(data = request.POST)
+    serializer = AccountRegistrationSerializer(data = request.data)
 
     if serializer.is_valid():
         account = serializer.save()
 
         data = {}
         data['response'] = 'user successfully registered'
-
-        data['email'] = account.email
-        data['username'] = account.username
-        data['first_name'] = account.first_name
-        data['last_name'] = account.last_name
+        user = {
+            'email' : account.email,
+            'username' : account.username,
+            'first_name' : account.first_name,
+            'last_name' : account.last_name, 
+        }
         
+        data['user'] = user
+
         token = Token.objects.get(user=account).key
         data['token'] = token
 
