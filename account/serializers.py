@@ -34,3 +34,19 @@ class AccountRegistrationSerializer(serializers.ModelSerializer):
 def create_user_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
+
+
+class AccountLoginSerializer(serializers.Serializer):
+
+    email = serializers.EmailField(max_length=254, required=True)
+    password = serializers.CharField(
+        max_length=254,
+        required=True,
+        write_only=True, 
+        style={'input_type': 'password'}
+    )
+
+    
+    
+
+    
