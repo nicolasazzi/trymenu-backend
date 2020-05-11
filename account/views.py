@@ -1,4 +1,4 @@
-
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
@@ -27,9 +27,9 @@ def registration_view(request):
         token = Token.objects.get(user=account).key
         data['token'] = token
 
+        return Response(data)
+
     else:
         print('not valid')
-        data = serializer.errors
-
-    return Response(data)
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
