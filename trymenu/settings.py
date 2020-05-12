@@ -25,7 +25,7 @@ SECRET_KEY = '@!)nheuj=kon=jxvwt9u#rd_l!cv)99qv21f=91h-8&uu59dwi'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['nikakwa.pythonanywhere.com', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
 
@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-
+    'django.contrib.staticfiles',
 
     'account.apps.AccountConfig',
 ]
