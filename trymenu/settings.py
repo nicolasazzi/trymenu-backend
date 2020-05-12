@@ -91,8 +91,19 @@ WSGI_APPLICATION = 'trymenu.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+        'NAME': 'postgresql-animate-87280',
+
+        'USER': 'danarfvrirbqzz',
+
+        'PASSWORD': '7bc29a5a4193bd17b00f602be8c2416747961fd72d2ce1c5b9a591325ca2d235',
+
+        'HOST': 'ec2-54-246-85-151.eu-west-1.compute.amazonaws.com',
+
+        'PORT': '5432',
+
     }
 }
 
