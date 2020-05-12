@@ -94,7 +94,7 @@ DATABASES = {
 
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': 'postgresql-animate-87280',
+        'NAME': 'd6dtbdfoc6ubgn',
 
         'USER': 'danarfvrirbqzz',
 
