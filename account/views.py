@@ -4,9 +4,10 @@ from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
 
+
 from .serializers import AccountRegistrationSerializer, AccountLoginSerializer
 from .models import Account
-
+from restaurant.models import Item
 
 
 @api_view(['POST',])
@@ -17,8 +18,8 @@ def registration_view(request):
     if serializer.is_valid():
         account = serializer.save()
 
-        data = {}
-        data['response'] = 'user successfully registered'
+        data = {'response' : 'user successfully registered'}
+
         user = {
             'email' : account.email,
             'username' : account.username,

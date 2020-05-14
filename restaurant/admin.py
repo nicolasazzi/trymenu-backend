@@ -1,8 +1,9 @@
 from django.contrib import admin
-from .models import restaurant, category, food
+from .models import Restaurant, Category, Item, Item_User_Relation
 
 
 
-admin.site.register(restaurant)
-admin.site.register(category)
-admin.site.register(food)
+admin.site.register(Restaurant)
+admin.site.register(Category)
+admin.site.register(Item)
+admin.site.register(Item_User_Relation) 
