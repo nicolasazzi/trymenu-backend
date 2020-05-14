@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'corsheaders',
 
     'account.apps.AccountConfig',
+    'restaurant.apps.RestaurantConfig',
 ]
 
 REST_FRAMEWORK = {
@@ -103,7 +104,6 @@ DATABASES = {
         'HOST': 'ec2-54-246-85-151.eu-west-1.compute.amazonaws.com',
 
         'PORT': '5432',
-
     }
 }
 
