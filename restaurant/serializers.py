@@ -3,13 +3,6 @@ from rest_framework import serializers
 from .models import Restaurant, Item, Category
 
 
-class RestaurantRequestSerializer(serializers.Serializer):
-
-    limit = serializers.IntegerField(required=False)
-    offset = serializers.IntegerField(required=False)
-
-
-
 class ItemSerializer(serializers.ModelSerializer):
 
     class Meta:

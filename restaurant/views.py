@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from django.shortcuts import get_object_or_404
 
-from .serializers import RestaurantRequestSerializer, ItemSerializer, RestaurantSerializer, CategorySerializer
+from .serializers import ItemSerializer, RestaurantSerializer, CategorySerializer
 from .models import Restaurant
 
 
@@ -14,17 +14,16 @@ from .models import Restaurant
 @permission_classes([IsAuthenticated])
 def restaurants_request_view(request):
 
-    serializer = RestaurantRequestSerializer(data=request.data)
 
-    if serializer.is_valid():
+    if request.GET:
         
         try:
-            limit = serializer.validated_data['limit']
+            limit = int(request.GET['limit'])
         except:
             limit = 20
         
         try:
-            offset = serializer.validated_data['offset']
+            offset = int(request.GET['offset'])
         except:
             offset = 0
 
@@ -73,7 +72,7 @@ def restaurants_request_view(request):
             restaurant_counter += 1
 
         offset +=  limit
-
+        print(limit)
         data = {
             'restaurants' : restaurant_data,
             'next' : 'https://trymenu.herokuapp.com/api/restaurant/get_restaurants?limit=' + str(limit) + '&offset=' + str(offset)
