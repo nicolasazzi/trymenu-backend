@@ -24,8 +24,8 @@ def restaurants_request_view(request):
     except:
         offset = 0
 
-
     restaurants = Restaurant.objects.all()[offset:limit]
+
     restaurant_data = []
     restaurant_counter = 0
 
@@ -69,10 +69,16 @@ def restaurants_request_view(request):
         restaurant_counter += 1
 
     offset +=  limit
-    print(limit)
+    limit += limit
+    if Restaurant.objects.all()[offset:limit]:
+        next = 'https://trymenu.herokuapp.com/api/restaurant/get_restaurants?offset=' + str(offset) + '&limit=' + str(limit)
+    else:
+        next = ''
+
     data = {
         'restaurants' : restaurant_data,
-        'next' : 'https://trymenu.herokuapp.com/api/restaurant/get_restaurants?limit=' + str(limit) + '&offset=' + str(offset)
+        'next' : next 
     }
+
 
     return Response(data)
