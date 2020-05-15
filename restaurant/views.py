@@ -30,46 +30,47 @@ def restaurants_request_view(request):
 
 
         restaurants = Restaurant.objects.all()[offset:limit]
-        restaurant_data = {}
+        restaurant_data = []
         restaurant_counter = 0
 
         for restaurant in restaurants:
 
             categories = restaurant.categories.all()
-            categories_data = {}
+            categories_data = []
             category_counter = 0
 
             for category in categories:
 
                 items = category.items.filter(restaurant=restaurant)
                 item_counter = 0
-                item_data = {}
+                item_data = []
 
                 for item in items:
 
                     item_serializer = ItemSerializer(item)
-
-                    item_data['item'+ str(item_counter)] = item_serializer.data
 
                     try:
                         did_try = item.item_user_relation_set.get(account=request.user).did_try
                     except:
                         did_try = False
 
-                    item_data['item'+ str(item_counter)]['did_try'] = did_try
-
+                    item_data.append(item_serializer.data)
+                    item_data[item_counter]['did_try'] = did_try
                     item_counter += 1
 
                 category_serializer = CategorySerializer(category)
 
-                categories_data['category'+ str(category_counter)] = {'category_items' : item_data}
-                categories_data['category'+ str(category_counter)] = category_serializer.data
+                categories_data.append(category_serializer.data)
+                categories_data[category_counter]['category_items'] = item_data
+
                 category_counter += 1
                 
+
             restaurant_serializer = RestaurantSerializer(restaurant)
             
-            restaurant_data[restaurant.name] = restaurant_serializer.data
-            restaurant_data[restaurant.name]['menu'] = categories_data
+            restaurant_data.append(restaurant_serializer.data)
+            restaurant_data[restaurant_counter]['menu'] = categories_data
+            restaurant_counter += 1
 
         offset +=  limit
 
