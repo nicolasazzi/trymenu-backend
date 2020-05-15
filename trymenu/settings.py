@@ -146,3 +146,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = "https://trymenu.herokuapp.com/static/"
+
+STATICFILES_DIRS = (
+    BASE_DIR.child('trymenu').child('static'),
+)
