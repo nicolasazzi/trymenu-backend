@@ -4,10 +4,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 
-from django.shortcuts import get_object_or_404
-
-from .serializers import ItemSerializer, RestaurantSerializer, CategorySerializer
-from .models import Restaurant
+from .serializers import ItemSerializer, RestaurantSerializer, CategorySerializer, TryItemSerializer
+from .models import Restaurant, Item_User_Relation, Item
 
 
 @api_view(['GET'])
@@ -46,7 +44,8 @@ def restaurants_request_view(request):
                 item_serializer = ItemSerializer(item)
 
                 try:
-                    did_try = item.item_user_relation_set.get(account=request.user).did_try
+                    item.item_user_relation_set.get(account=request.user)
+                    did_try = True
                 except:
                     did_try = False
 
@@ -82,3 +81,22 @@ def restaurants_request_view(request):
 
 
     return Response(data)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def try_item(request):
+    
+    try_item_serializer = TryItemSerializer(request.data)
+    try:
+        item_tried = Item.objects.get(id = try_item_serializer.data['id'])
+    except:
+        return Response(status.HTTP_400_BAD_REQUEST)
+    
+    item_user_relation = Item_User_Relation(
+        account = request.user, item=item_tried
+    )
+
+    item_user_relation.save()
+
+    return Response({'did_try' : True})

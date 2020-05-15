@@ -43,6 +43,5 @@ class Item(BaseModel):
 
 class Item_User_Relation(BaseModel):
 
-    did_try = models.BooleanField(default=False)
     account = models.ForeignKey("account.Account", on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)

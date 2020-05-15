@@ -22,3 +22,8 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'name']
+
+
+class TryItemSerializer(serializers.Serializer):
+
+    id = serializers.UUIDField()
