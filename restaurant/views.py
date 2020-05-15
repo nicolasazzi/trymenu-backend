@@ -10,8 +10,8 @@ from .serializers import RestaurantRequestSerializer, ItemSerializer, Restaurant
 from .models import Restaurant
 
 
-@permission_classes(IsAuthenticated,)
-@api_view(['GET',])
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def restaurants_request_view(request):
 
     serializer = RestaurantRequestSerializer(data=request.data)
