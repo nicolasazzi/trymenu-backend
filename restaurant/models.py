@@ -1,7 +1,15 @@
 from django.db import models
+import uuid
+
+class BaseModel(models.Model):
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+
+    class Meta:
+        abstract = True
 
 
-class Restaurant(models.Model):
+class Restaurant(BaseModel):
 
     name = models.CharField(max_length=50)
     location = models.CharField(max_length=100)
@@ -12,7 +20,7 @@ class Restaurant(models.Model):
         return self.name + " in " + self.location
 
 
-class Category(models.Model):
+class Category(BaseModel):
 
     name = models.CharField(max_length=50, unique=True)
 
@@ -20,7 +28,7 @@ class Category(models.Model):
         return self.name
 
     
-class Item(models.Model):
+class Item(BaseModel):
 
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=50)
@@ -33,7 +41,7 @@ class Item(models.Model):
         return self.name + " (" + str(self.category) + " / " + str(self.restaurant) + ")"
 
 
-class Item_User_Relation(models.Model):
+class Item_User_Relation(BaseModel):
 
     did_try = models.BooleanField(default=False)
     account = models.ForeignKey("account.Account", on_delete=models.CASCADE)
