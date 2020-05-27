@@ -1,8 +1,9 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.models import Token
+
 
 from .serializers import ItemSerializer, RestaurantSerializer, CategorySerializer, TryItemSerializer
 from .models import Restaurant, Item_User_Relation, Item
@@ -21,9 +22,18 @@ def restaurants_request_view(request):
         offset = int(request.GET['offset'])
     except:
         offset = 0
+    
+    restaurants = Restaurant.objects.all()[offset:offset+limit]
 
-    restaurants = Restaurant.objects.all()[offset:limit]
+    data = get_restaurant_contents(request=request, restaurants=restaurants)
 
+    next = pagination_maker(request=request, offset=offset, limit=limit)
+    data['next'] = next
+    return Response(data)
+
+
+def get_restaurant_contents(request, restaurants):
+    
     restaurant_data = []
     restaurant_counter = 0
 
@@ -40,7 +50,7 @@ def restaurants_request_view(request):
             item_data = []
 
             for item in items:
-
+                
                 item_serializer = ItemSerializer(item)
 
                 try:
@@ -52,7 +62,7 @@ def restaurants_request_view(request):
                 item_data.append(item_serializer.data)
                 item_data[item_counter]['did_try'] = did_try
                 item_counter += 1
-
+            
             category_serializer = CategorySerializer(category)
 
             categories_data.append(category_serializer.data)
@@ -67,20 +77,24 @@ def restaurants_request_view(request):
         restaurant_data[restaurant_counter]['menu'] = categories_data
         restaurant_counter += 1
 
-    offset +=  limit
-    limit += limit
-    if Restaurant.objects.all()[offset:limit]:
-        next = 'https://trymenu.herokuapp.com/api/restaurant/get_restaurants?offset=' + str(offset) + '&limit=' + str(limit)
-    else:
-        next = ''
 
     data = {
         'restaurants' : restaurant_data,
-        'next' : next 
     }
 
-
     return Response(data)
+
+
+def pagination_maker(request, offset, limit, default_next_additive = ''):
+
+    offset +=  limit
+
+    if Restaurant.objects.all()[offset:offset+limit]:
+        next = request.path + '?offset=' + str(offset) + '&limit=' + str(limit) + default_next_additive
+        return next
+    else:
+        return ''
+
 
 
 @api_view(['PUT'])
