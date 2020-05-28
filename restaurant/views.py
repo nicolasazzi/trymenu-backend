@@ -8,27 +8,21 @@ from rest_framework.authtoken.models import Token
 from .serializers import ItemSerializer, RestaurantSerializer, CategorySerializer, TryItemSerializer
 from .models import Restaurant, Item_User_Relation, Item
 
+from account.models import Account
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def restaurants_request_view(request):
 
-    try:
-        limit = int(request.GET['limit'])
-    except:
-        limit = 20
-    
-    try:
-        offset = int(request.GET['offset'])
-    except:
-        offset = 0
-    
-    restaurants = Restaurant.objects.all()[offset:offset+limit]
+    offset, limit = get_offset_limit(request=request)
 
-    data = get_restaurant_contents(request=request, restaurants=restaurants)
+    restaurants = Restaurant.objects.all()[offset:offset+limit+1]
 
-    next = pagination_maker(request=request, offset=offset, limit=limit)
+    data = get_restaurant_contents(request=request, restaurants=restaurants[:limit])
+
+    next = pagination_maker(request=request, offset=offset, more=restaurants[limit:], limit=limit)
     data['next'] = next
+
     return Response(data)
 
 
@@ -85,16 +79,29 @@ def get_restaurant_contents(request, restaurants):
     return Response(data)
 
 
-def pagination_maker(request, offset, limit, default_next_additive = ''):
+def pagination_maker(request, offset, limit, more, default_next_additive = ''):
 
     offset +=  limit
 
-    if Restaurant.objects.all()[offset:offset+limit]:
+    if more:
         next = request.path + '?offset=' + str(offset) + '&limit=' + str(limit) + default_next_additive
         return next
     else:
         return ''
 
+def get_offset_limit(request, default_limit = 20):
+
+    try:
+        limit = int(request.GET['limit'])
+    except:
+        limit = default_limit
+    
+    try:
+        offset = int(request.GET['offset'])
+    except:
+        offset = 0
+
+    return offset, limit
 
 
 @api_view(['PUT'])

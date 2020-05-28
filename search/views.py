@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from restaurant.models import Restaurant
 from restaurant.serializers import RestaurantSerializer
-from restaurant.views import pagination_maker
+from restaurant.views import pagination_maker, get_offset_limit
 
 from account.models import Account
 from account.serializers import AccountSerializer
@@ -21,29 +21,21 @@ def search(request):
     search_term = request.GET['q']
     tags = request.GET['type'].split(",")
     
-
-    try:
-        limit = int(request.GET['limit'])
-    except:
-        limit = 20
-    
-    try:
-        offset = int(request.GET['offset'])
-    except:
-        offset = 0
+    offset, limit = get_offset_limit(request=request)
 
 
     for tag in tags:
 
         addition = '&q=' + search_term + '&type=' + tag
-        next = pagination_maker(request=request, offset=offset, limit=limit)
 
         if tag == 'restaurant':
 
-            restaurants = Restaurant.objects.filter(name__icontains = search_term)[offset:offset+limit]
+            restaurants = Restaurant.objects.filter(name__icontains = search_term)[offset:offset+limit+1]
+          
+            next = pagination_maker(request=request, offset=offset, limit=limit, more=restaurants[limit:])
             restaurant_list = []
 
-            for restaurant in restaurants:
+            for restaurant in restaurants[:limit]:
 
                 restaurant_serializer = RestaurantSerializer(restaurant)
                 restaurant_list.append(restaurant_serializer.data)
@@ -53,12 +45,12 @@ def search(request):
 
 
         elif tag == 'user':
-
+            
             accounts = Account.objects.filter(
                 Q(first_name__icontains=search_term) | Q(last_name__icontains=search_term)
-                )[offset:offset+limit]
+                )[offset:offset+limit+1]
 
-            print(accounts)
+            next = pagination_maker(request=request, offset=offset, limit=limit, more=accounts[limit:])
 
             accounts_list = []
 
